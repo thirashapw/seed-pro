@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Ethereum",
+    "rpc_url": "https://mainnet.infura.io/v3/2defb7b4dc9d4c16b874244e513e4cdb",
+    "threshold_wei": "50000000000000000"
+  },
+  {
+    "name": "BSC",
+    "rpc_url": "https://bsc-mainnet.infura.io/v3/2defb7b4dc9d4c16b874244e513e4cdb",
+    "threshold_wei": "50000000000000000"
+  },
+  {
+    "name": "Base",
+    "rpc_url": "https://base-mainnet.infura.io/v3/2defb7b4dc9d4c16b874244e513e4cdb",
+    "threshold_wei": "50000000000000000"
+  }
+]

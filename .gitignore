@@ -1,0 +1,5 @@
+binary
+logs
+*.zip
+*.logs
+checked_seeds.txt
