@@ -1,4 +1,4 @@
-// version 1.0.1
+// version 1.0.2
 
 package main
 
@@ -18,7 +18,6 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
-
 
 // use BIP39 english wordlist
 var Bip39WordList = bip39.WordList
@@ -188,8 +187,6 @@ func main() {
 // Dummy chain params (not used by Ethereum)
 var chainParams = chaincfg.MainNetParams
 
-
-
 // Derive m/44'/60'/0'/0/index using btcsuite hdkeychain
 func deriveEthAccount(master *hdkeychain.ExtendedKey, index int) (*ecdsa.PrivateKey, common.Address) {
 
@@ -235,5 +232,3 @@ func deriveEthAccount(master *hdkeychain.ExtendedKey, index int) (*ecdsa.Private
 
 	return priv, addr
 }
-
-
