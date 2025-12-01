@@ -1,17 +1,50 @@
 [
   {
     "name": "Ethereum",
-    "rpc_url": "https://mainnet.infura.io/v3/2defb7b4dc9d4c16b874244e513e4cdb",
+    "rpc_urls": [
+      "https://rpc.mevblocker.io",
+      "https://eth.llamarpc.com",
+      "https://ethereum.publicnode.com",
+      "https://1rpc.io/eth",
+      "https://eth.drpc.org",
+      "https://rpc.ankr.com/eth",
+      "https://cloudflare-eth.com",
+      "https://eth-mainnet.public.blastapi.io",
+      "https://ethereum-rpc.publicnode.com",
+      "https://eth-pokt.nodies.app"
+    ],
     "threshold_wei": "50000000000000000"
   },
   {
     "name": "BSC",
-    "rpc_url": "https://bsc-mainnet.infura.io/v3/2defb7b4dc9d4c16b874244e513e4cdb",
+    "rpc_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://bsc-dataseed.binance.org",
+      "https://bsc-dataseed1.binance.org",
+      "https://bsc-dataseed2.binance.org",
+      "https://bsc.publicnode.com",
+      "https://1rpc.io/bnb",
+      "https://bsc.drpc.org",
+      "https://rpc.ankr.com/bsc",
+      "https://bsc-mainnet.public.blastapi.io",
+      "https://bsc-pokt.nodies.app"
+    ],
     "threshold_wei": "50000000000000000"
   },
   {
     "name": "Base",
-    "rpc_url": "https://base-mainnet.infura.io/v3/2defb7b4dc9d4c16b874244e513e4cdb",
+    "rpc_urls": [
+      "https://1rpc.io/base",
+      "https://mainnet.base.org",
+      "https://base.llamarpc.com",
+      "https://base.publicnode.com",
+      "https://base.drpc.org",
+      "https://rpc.ankr.com/base",
+      "https://base-mainnet.public.blastapi.io",
+      "https://base.meowrpc.com",
+      "https://base-pokt.nodies.app",
+      "https://base.gateway.tenderly.co"
+    ],
     "threshold_wei": "50000000000000000"
   }
 ]
