@@ -1,4 +1,4 @@
-// version 1.0.2
+// version 1.0.3
 
 package main
 
@@ -10,6 +10,7 @@ import (
 	"math/big"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/btcsuite/btcd/btcutil/hdkeychain"
 	"github.com/btcsuite/btcd/chaincfg"
@@ -124,40 +125,62 @@ func main() {
 				var balance *big.Int
 				var successfulRPC string
 				var lastErr error
+				retryAttempt := 0
+				maxRetries := 3
 
-				// Try each RPC endpoint until one succeeds
-				for rpcIdx, rpcURL := range networkConfig.RpcURLs {
-					client, err := ethclient.Dial(rpcURL)
-					if err != nil {
-						log.Printf("[%s] Failed to connect to RPC %d/%d: %v", networkName, rpcIdx+1, len(networkConfig.RpcURLs), err)
-						lastErr = err
-						continue
+				// Retry loop for when all RPCs fail
+				for retryAttempt < maxRetries {
+					// Try each RPC endpoint until one succeeds
+					for rpcIdx, rpcURL := range networkConfig.RpcURLs {
+						client, err := ethclient.Dial(rpcURL)
+						if err != nil {
+							log.Printf("[%s] Failed to connect to RPC %d/%d: %v", networkName, rpcIdx+1, len(networkConfig.RpcURLs), err)
+							lastErr = err
+							continue
+						}
+
+						balance, err = client.BalanceAt(ctx, addr, nil)
+						client.Close()
+
+						if err != nil {
+							log.Printf("[%s] Balance check failed on RPC %d/%d: %v", networkName, rpcIdx+1, len(networkConfig.RpcURLs), err)
+							lastErr = err
+							continue
+						}
+
+						// Success!
+						successfulRPC = rpcURL
+						break
 					}
 
-					balance, err = client.BalanceAt(ctx, addr, nil)
-					client.Close()
-
-					if err != nil {
-						log.Printf("[%s] Balance check failed on RPC %d/%d: %v", networkName, rpcIdx+1, len(networkConfig.RpcURLs), err)
-						lastErr = err
-						continue
+					// If we got a successful response, break out of retry loop
+					if successfulRPC != "" {
+						break
 					}
 
-					// Success!
-					successfulRPC = rpcURL
-					break
+					// All RPCs failed, retry after delay
+					retryAttempt++
+					if retryAttempt < maxRetries {
+						errMsg := fmt.Sprintf("[%s] All %d RPC endpoints failed (Attempt %d/%d). Last error: %v", networkName, len(networkConfig.RpcURLs), retryAttempt, maxRetries, lastErr)
+						fmt.Println("\n" + strings.Repeat("=", 70))
+						fmt.Println("RPC ERROR:")
+						fmt.Println(errMsg)
+						fmt.Println("Waiting 30 seconds before retry...")
+						fmt.Println(strings.Repeat("=", 70))
+						log.Println(errMsg)
+
+						time.Sleep(30 * time.Second)
+					}
 				}
 
-				// If all RPCs failed, show critical error
+				// If all retries failed, show critical error
 				if successfulRPC == "" {
-					errMsg := fmt.Sprintf("[%s] CRITICAL: All %d RPC endpoints failed for %s. Last error: %v", networkName, len(networkConfig.RpcURLs), addr.Hex(), lastErr)
+					errMsg := fmt.Sprintf("[%s] CRITICAL: All %d RPC endpoints failed after %d attempts for %s. Last error: %v", networkName, len(networkConfig.RpcURLs), maxRetries, addr.Hex(), lastErr)
 					fmt.Println("\n" + strings.Repeat("=", 70))
 					fmt.Println("CRITICAL ERROR:")
 					fmt.Println(errMsg)
 					fmt.Println(strings.Repeat("=", 70))
-					fmt.Println("\nPress Enter to continue...")
 					log.Println(errMsg)
-					fmt.Scanln()
 					continue
 				}
 
